@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Nueva reserva — RentaSalas{% endblock %}
+{% block sidebar_title %}Nueva reserva{% endblock %}
+{% block header_title %}Nueva reserva{% endblock %}
+
+{% block content %}
+<div class="teams-card" style="max-width:560px;">
+    <div class="teams-card__body">
+        <p style="margin:0 0 12px;">
+            El formulario completo de reserva se implementará en el siguiente paso (CRUD).
+        </p>
+        <p style="margin:0 0 20px;color:var(--text-secondary);font-size:14px;">
+            Mientras tanto, puedes explorar salas disponibles o revisar tus reservas existentes.
+        </p>
+        <a href="{% url 'lista_salas' %}" class="btn-teams btn-teams--primary">Explorar salas</a>
+        <a href="{% url 'lista_reservas' %}" class="btn-teams btn-teams--secondary" style="margin-left:8px;">Mis reservas</a>
+    </div>
+</div>
+{% endblock %}

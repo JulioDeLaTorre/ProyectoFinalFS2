@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block title %}Inicio — RentaSalas{% endblock %}
+{% block header_title %}Inicio{% endblock %}
+
+{% block content %}
+<section class="teams-hero">
+    {% if user.is_authenticated %}
+    <h2 class="teams-hero__greeting">Hola, {{ user.nombre_completo|default:user.username }}</h2>
+    <p class="teams-hero__sub">Gestiona tus reservas de salas desde un solo lugar.</p>
+    {% else %}
+    <h2 class="teams-hero__greeting">Bienvenido a RentaSalas</h2>
+    <p class="teams-hero__sub">Reserva salas de reunión de forma rápida, como en tu espacio de trabajo favorito.</p>
+    {% endif %}
+    <div class="teams-hero__actions">
+        {% if user.is_authenticated %}
+        <a href="{% url 'reserva_crear' %}" class="btn-teams btn-teams--secondary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M12 4.5a.75.75 0 0 1 .75.75v6h6a.75.75 0 0 1 0 1.5h-6v6a.75.75 0 0 1-1.5 0v-6h-6a.75.75 0 0 1 0-1.5h6v-6A.75.75 0 0 1 12 4.5z"/>
+            </svg>
+            Nueva reserva
+        </a>
+        <a href="{% url 'lista_salas' %}" class="btn-teams btn-teams--ghost">Ver salas disponibles</a>
+        {% else %}
+        <a href="{% url 'registro' %}" class="btn-teams btn-teams--secondary">Crear cuenta</a>
+        <a href="{% url 'login' %}" class="btn-teams btn-teams--ghost">Iniciar sesión</a>
+        {% endif %}
+    </div>
+</section>
+
+<div class="teams-columns">
+    <div>
+        <h3 style="font-size:15px;font-weight:600;margin:0 0 16px;color:var(--text-secondary);">
+            Acciones rápidas
+        </h3>
+        <div class="teams-grid">
+            <a href="{% url 'lista_salas' %}" class="teams-tile">
+                <div class="teams-tile__icon">
+                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                        <path d="M6.5 3.25A2.25 2.25 0 0 0 4.25 5.5v13a2.25 2.25 0 0 0 2.25 2.25h11a2.25 2.25 0 0 0 2.25-2.25v-13a2.25 2.25 0 0 0-2.25-2.25h-11z"/>
+                    </svg>
+                </div>
+                <h4 class="teams-tile__title">Explorar salas</h4>
+                <p class="teams-tile__desc">Consulta capacidad, precios y fotos de cada espacio.</p>
+            </a>
+            <a href="{% url 'lista_reservas' %}" class="teams-tile">
+                <div class="teams-tile__icon">
+                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                        <path d="M17.75 3A3.25 3.25 0 0 1 21 6.25v11.5A3.25 3.25 0 0 1 17.75 21H6.25A3.25 3.25 0 0 1 3 17.75V6.25A3.25 3.25 0 0 1 6.25 3h11.5z"/>
+                    </svg>
+                </div>
+                <h4 class="teams-tile__title">Mis reservas</h4>
+                <p class="teams-tile__desc">Revisa, edita o cancela tus reservas activas.</p>
+            </a>
+            <a href="{% if user.is_authenticated %}{% url 'mi_cuenta' %}{% else %}{% url 'login' %}?next={% url 'mi_cuenta' %}{% endif %}" class="teams-tile">
+                <div class="teams-tile__icon">
+                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                        <path d="M12 2a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm-8 18.25a8 8 0 1 1 16 0 .75.75 0 0 1-1.5 0 6.5 6.5 0 1 0-13 0 .75.75 0 0 1-1.5 0z"/>
+                    </svg>
+                </div>
+                <h4 class="teams-tile__title">Mi cuenta</h4>
+                <p class="teams-tile__desc">Perfil, contraseña y preferencias de usuario.</p>
+            </a>
+            <a href="{% if user.is_authenticated %}{% url 'calendario' %}{% else %}{% url 'login' %}?next={% url 'calendario' %}{% endif %}" class="teams-tile">
+                <div class="teams-tile__icon">
+                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                        <path d="M17.75 3A3.25 3.25 0 0 1 21 6.25v11.5A3.25 3.25 0 0 1 17.75 21H6.25A3.25 3.25 0 0 1 3 17.75V6.25A3.25 3.25 0 0 1 6.25 3h11.5zm0 1.5H6.25A1.75 1.75 0 0 0 4.5 6.25v11.5c0 .966.784 1.75 1.75 1.75h11.5a1.75 1.75 0 0 0 1.75-1.75V6.25A1.75 1.75 0 0 0 17.75 4.5z"/>
+                    </svg>
+                </div>
+                <h4 class="teams-tile__title">Calendario</h4>
+                <p class="teams-tile__desc">Vista de tus reservas programadas.</p>
+            </a>
+        </div>
+    </div>
+
+    <aside>
+        <div class="teams-card">
+            <div class="teams-card__header">
+                <h3 class="teams-card__title">Accesos de cuenta</h3>
+            </div>
+            <div class="teams-card__body" style="padding-top:8px;padding-bottom:8px;">
+                <div class="teams-feed-item">
+                    <div class="teams-feed-item__avatar">→</div>
+                    <div class="teams-feed-item__content">
+                        <p class="teams-feed-item__text">
+                            <a href="{% url 'lista_salas' %}"><strong>Salas</strong></a> — catálogo disponible
+                        </p>
+                    </div>
+                </div>
+                {% if user.is_authenticated %}
+                <div class="teams-feed-item">
+                    <div class="teams-feed-item__avatar">🔒</div>
+                    <div class="teams-feed-item__content">
+                        <p class="teams-feed-item__text">
+                            <a href="{% url 'cambiar_contrasena' %}"><strong>Cambiar contraseña</strong></a>
+                        </p>
+                    </div>
+                </div>
+                {% else %}
+                <div class="teams-feed-item">
+                    <div class="teams-feed-item__avatar">?</div>
+                    <div class="teams-feed-item__content">
+                        <p class="teams-feed-item__text">
+                            <a href="{% url 'password_reset' %}"><strong>¿Olvidaste tu contraseña?</strong></a>
+                        </p>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </aside>
+</div>
+{% endblock %}

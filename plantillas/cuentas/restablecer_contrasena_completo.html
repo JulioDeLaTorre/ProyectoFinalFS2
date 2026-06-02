@@ -1,0 +1,11 @@
+{% extends "cuentas/base_cuentas.html" %}
+
+{% block title %}Contraseña restablecida — RentaSalas{% endblock %}
+
+{% block content %}
+<h1 class="teams-auth-card__title">Listo</h1>
+<p class="teams-auth-card__sub">Tu contraseña fue restablecida. Ya puedes iniciar sesión.</p>
+<a href="{% url 'login' %}" class="btn-teams btn-teams--primary teams-auth-card__submit" style="display:flex;justify-content:center;text-decoration:none;">
+    Iniciar sesión
+</a>
+{% endblock %}

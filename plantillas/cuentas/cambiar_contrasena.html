@@ -1,0 +1,21 @@
+{% extends "cuentas/base_cuentas.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Cambiar contraseña — RentaSalas{% endblock %}
+
+{% block content %}
+<h1 class="teams-auth-card__title">Cambiar contraseña</h1>
+<p class="teams-auth-card__sub">Ingresa tu contraseña actual y la nueva dos veces.</p>
+
+<form method="post" novalidate>
+    {% csrf_token %}
+    {{ form|crispy }}
+    <button type="submit" class="btn-teams btn-teams--primary teams-auth-card__submit">
+        Guardar contraseña
+    </button>
+</form>
+
+<p class="teams-auth-card__link">
+    <a href="{% url 'mi_cuenta' %}">← Volver a mi cuenta</a>
+</p>
+{% endblock %}

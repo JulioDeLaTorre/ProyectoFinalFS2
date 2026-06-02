@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Mi cuenta — RentaSalas{% endblock %}
+{% block sidebar_title %}Mi cuenta{% endblock %}
+{% block header_title %}Mi cuenta{% endblock %}
+
+{% block sidebar_nav %}
+<p class="teams-sidebar__section-label">Cuenta</p>
+<a href="{% url 'mi_cuenta' %}" class="teams-sidebar__item active">
+    <span class="teams-sidebar__item-icon">{{ user.username|slice:":2"|upper }}</span>
+    <span class="teams-sidebar__item-text">
+        <span class="teams-sidebar__item-title">Perfil</span>
+        <span class="teams-sidebar__item-sub">{{ user.email }}</span>
+    </span>
+</a>
+<a href="{% url 'cambiar_contrasena' %}" class="teams-sidebar__item">
+    <span class="teams-sidebar__item-icon teams-sidebar__item-icon--muted">🔒</span>
+    <span class="teams-sidebar__item-text">
+        <span class="teams-sidebar__item-title">Cambiar contraseña</span>
+        <span class="teams-sidebar__item-sub">Actualizar credenciales</span>
+    </span>
+</a>
+{% endblock %}
+
+{% block content %}
+<div class="teams-card" style="max-width:560px;">
+    <div class="teams-card__header">
+        <h2 class="teams-card__title">Datos del perfil</h2>
+    </div>
+    <div class="teams-card__body">
+        <p><strong>Usuario:</strong> {{ user.username }}</p>
+        <p><strong>Correo:</strong> {{ user.email|default:"—" }}</p>
+        <p><strong>Nombre:</strong> {{ user.nombre_completo|default:"—" }}</p>
+        <p><strong>Teléfono:</strong> {{ user.telefono|default:"—" }}</p>
+        <p style="margin-bottom:0;"><strong>Miembro desde:</strong> {{ user.fecha_creacion|date:"d/m/Y" }}</p>
+    </div>
+</div>
+
+<div style="margin-top:16px;display:flex;gap:12px;flex-wrap:wrap;">
+    <a href="{% url 'cambiar_contrasena' %}" class="btn-teams btn-teams--primary">Cambiar contraseña</a>
+    <a href="{% url 'lista_reservas' %}" class="btn-teams btn-teams--secondary">Mis reservas</a>
+</div>
+{% endblock %}

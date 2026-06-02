@@ -1,0 +1,25 @@
+{% extends "cuentas/base_cuentas.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Iniciar sesión — RentaSalas{% endblock %}
+
+{% block content %}
+<h1 class="teams-auth-card__title">Iniciar sesión</h1>
+<p class="teams-auth-card__sub">Usa tu usuario o correo electrónico para acceder.</p>
+
+<form method="post" novalidate>
+    {% csrf_token %}
+    {{ form|crispy }}
+    <button type="submit" class="btn-teams btn-teams--primary teams-auth-card__submit">
+        Iniciar sesión
+    </button>
+</form>
+
+<p class="teams-auth-card__link">
+  <a href="{% url 'password_reset' %}">¿Olvidaste tu contraseña?</a>
+</p>
+<p class="teams-auth-card__link">
+    ¿No tienes cuenta?
+    <a href="{% url 'registro' %}">Regístrate</a>
+</p>
+{% endblock %}

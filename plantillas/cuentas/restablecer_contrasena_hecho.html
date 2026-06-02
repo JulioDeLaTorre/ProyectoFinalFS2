@@ -1,0 +1,14 @@
+{% extends "cuentas/base_cuentas.html" %}
+
+{% block title %}Correo enviado — RentaSalas{% endblock %}
+
+{% block content %}
+<h1 class="teams-auth-card__title">Revisa tu correo</h1>
+<p class="teams-auth-card__sub">
+    Si existe una cuenta con ese correo, recibirás un enlace para restablecer la contraseña.
+    En local, revisa la terminal de <code>docker compose</code> (backend de consola).
+</p>
+<a href="{% url 'login' %}" class="btn-teams btn-teams--primary teams-auth-card__submit" style="display:flex;justify-content:center;text-decoration:none;">
+    Volver a iniciar sesión
+</a>
+{% endblock %}
