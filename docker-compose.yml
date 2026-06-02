@@ -1,26 +1,24 @@
-version: "3.9"
-
 services:
   web:
     build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+        # Simplificamos el comando asumiendo que el WORKDIR es /code
+      - .:/code
     ports:
       - "8000:8000"
-    volumes:
-      - .:/code
-    # Simplificamos el comando asumiendo que el WORKDIR es /code
-    command: python manage.py runserver 0.0.0.0:8000
     depends_on:
       - db
 
   db:
-    image: postgres:15  
+    image: postgres:15
     volumes:
       - postgres_data:/var/lib/postgresql/data/
+            #Seguridad para que no se puedan meter sin credenciales
     environment:
-      //Seguridad para que no se puedan meter sin credenciales
-      - POSTGRES_DB=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      POSTGRES_DB: reservas_db
+      POSTGRES_USER: reservas_user
+      POSTGRES_PASSWORD: reservas_password
 
 volumes:
   postgres_data:
