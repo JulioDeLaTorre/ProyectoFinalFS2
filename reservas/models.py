@@ -2,7 +2,6 @@ import uuid
 from django.conf import settings
 from django.db import models
 
-
 class Sala(models.Model):
     ESTADOS_SALA = (
         ('Disponible', 'Disponible'),
