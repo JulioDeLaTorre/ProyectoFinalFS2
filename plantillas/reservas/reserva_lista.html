@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Mis reservas — RentaSalas{% endblock %}
+{% block sidebar_title %}Reservas{% endblock %}
+{% block header_title %}Mis reservas{% endblock %}
+
+{% block header_actions %}
+<a href="{% url 'reserva_crear' %}" class="btn-teams btn-teams--primary">Nueva reserva</a>
+{{ block.super }}
+{% endblock %}
+
+{% block content %}
+{% if reservas %}
+<div class="teams-card">
+    <div class="teams-card__body" style="padding-top:8px;padding-bottom:8px;">
+        {% for reserva in reservas %}
+        <div class="teams-feed-item">
+            <div class="teams-feed-item__avatar">{{ reserva.sala.nombre|slice:":2"|upper }}</div>
+            <div class="teams-feed-item__content">
+                <p class="teams-feed-item__text">
+                    <strong>{{ reserva.sala.nombre }}</strong> —
+                    {{ reserva.fecha_inicio|date:"d/m/Y H:i" }} a {{ reserva.fecha_fin|date:"H:i" }}
+                </p>
+                <span class="teams-feed-item__time">
+                    <span class="teams-badge {% if reserva.estado_reserva == 'Confirmada' %}teams-badge--success{% elif reserva.estado_reserva == 'Cancelada' %}teams-badge--warning{% endif %}">
+                        {{ reserva.estado_reserva }}
+                    </span>
+                    · {{ reserva.tipo_renta }} · ${{ reserva.costo_total }}
+                </span>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% else %}
+<div class="teams-card">
+    <div class="teams-card__body">
+        <p style="margin:0 0 16px;">Aún no tienes reservas.</p>
+        <a href="{% url 'reserva_crear' %}" class="btn-teams btn-teams--primary">Crear primera reserva</a>
+        <a href="{% url 'lista_salas' %}" class="btn-teams btn-teams--secondary" style="margin-left:8px;">Ver salas</a>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

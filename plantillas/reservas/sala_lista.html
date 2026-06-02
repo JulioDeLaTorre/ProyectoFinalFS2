@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Salas — RentaSalas{% endblock %}
+{% block sidebar_title %}Salas{% endblock %}
+{% block header_title %}Explorar salas{% endblock %}
+
+{% block content %}
+{% if salas %}
+<div class="teams-grid">
+    {% for sala in salas %}
+    <article class="teams-tile" style="cursor:default;">
+        {% if sala.imagen_portada %}
+        <img src="{{ sala.imagen_portada.url }}" alt="{{ sala.nombre }}" style="width:100%;height:140px;object-fit:cover;border-radius:8px;margin-bottom:4px;">
+        {% else %}
+        <div class="teams-tile__icon">
+            <span style="font-size:14px;font-weight:700;">{{ sala.nombre|slice:":2"|upper }}</span>
+        </div>
+        {% endif %}
+        <h4 class="teams-tile__title">{{ sala.nombre }}</h4>
+        <p class="teams-tile__desc">{{ sala.ubicacion }} · Cap. {{ sala.capacidad_maxima }}</p>
+        <p class="teams-tile__desc" style="margin:0;">
+            ${{ sala.precio_por_hora }}/h ·
+            <span class="teams-badge {% if sala.estado == 'Disponible' %}teams-badge--success{% elif sala.estado == 'Mantenimiento' %}teams-badge--warning{% endif %}">
+                {{ sala.estado }}
+            </span>
+        </p>
+    </article>
+    {% endfor %}
+</div>
+{% if page_obj.has_other_pages %}
+<nav class="teams-pagination" aria-label="Paginación">
+    {% if page_obj.has_previous %}
+    <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="btn-teams btn-teams--secondary">Anterior</a>
+    {% endif %}
+    <span style="font-size:13px;color:var(--text-secondary);">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="btn-teams btn-teams--secondary">Siguiente</a>
+    {% endif %}
+</nav>
+{% endif %}
+{% else %}
+<div class="teams-card">
+    <div class="teams-card__body">
+        <p style="margin:0;color:var(--text-secondary);">No hay salas disponibles en este momento. Vuelve más tarde.</p>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "cuentas/base_cuentas.html" %}
+
+{% block title %}Contraseña actualizada — RentaSalas{% endblock %}
+
+{% block content %}
+<h1 class="teams-auth-card__title">Contraseña actualizada</h1>
+<p class="teams-auth-card__sub">Tu contraseña se guardó correctamente.</p>
+<a href="{% url 'mi_cuenta' %}" class="btn-teams btn-teams--primary teams-auth-card__submit" style="display:flex;justify-content:center;text-decoration:none;">
+    Ir a mi cuenta
+</a>
+<a href="{% url 'inicio' %}" class="btn-teams btn-teams--ghost teams-auth-card__submit" style="display:flex;justify-content:center;text-decoration:none;margin-top:8px;">
+    Ir al inicio
+</a>
+{% endblock %}

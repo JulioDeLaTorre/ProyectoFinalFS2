@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Calendario — RentaSalas{% endblock %}
+{% block sidebar_title %}Calendario{% endblock %}
+{% block header_title %}Calendario de reservas{% endblock %}
+
+{% block content %}
+<p style="color:var(--text-secondary);margin:0 0 20px;font-size:14px;">
+    Vista de tus próximas reservas (calendario visual completo en desarrollo).
+</p>
+
+{% if reservas %}
+<div class="teams-card">
+    <div class="teams-card__header">
+        <h3 class="teams-card__title">Próximas reservas</h3>
+    </div>
+    <div class="teams-card__body" style="padding-top:8px;padding-bottom:8px;">
+        {% for reserva in reservas %}
+        <div class="teams-feed-item">
+            <div class="teams-feed-item__avatar">{{ reserva.fecha_inicio|date:"d" }}</div>
+            <div class="teams-feed-item__content">
+                <p class="teams-feed-item__text">
+                    <strong>{{ reserva.sala.nombre }}</strong>
+                </p>
+                <span class="teams-feed-item__time">
+                    {{ reserva.fecha_inicio|date:"l d/m/Y" }} ·
+                    {{ reserva.fecha_inicio|time:"H:i" }} – {{ reserva.fecha_fin|time:"H:i" }}
+                </span>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% else %}
+<div class="teams-card">
+    <div class="teams-card__body">
+        <p style="margin:0;">No tienes reservas programadas.</p>
+        <a href="{% url 'reserva_crear' %}" class="btn-teams btn-teams--primary" style="margin-top:16px;display:inline-flex;">Nueva reserva</a>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

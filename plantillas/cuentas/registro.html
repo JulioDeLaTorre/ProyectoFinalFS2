@@ -1,0 +1,22 @@
+{% extends "cuentas/base_cuentas.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Registrarse — RentaSalas{% endblock %}
+
+{% block content %}
+<h1 class="teams-auth-card__title">Crear cuenta</h1>
+<p class="teams-auth-card__sub">Regístrate para reservar salas en el sistema.</p>
+
+<form method="post" novalidate>
+    {% csrf_token %}
+    {{ form|crispy }}
+    <button type="submit" class="btn-teams btn-teams--primary teams-auth-card__submit">
+        Crear cuenta
+    </button>
+</form>
+
+<p class="teams-auth-card__link">
+    ¿Ya tienes cuenta?
+    <a href="{% url 'login' %}">Iniciar sesión</a>
+</p>
+{% endblock %}
