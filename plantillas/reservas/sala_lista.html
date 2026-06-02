@@ -8,25 +8,35 @@
 {% if salas %}
 <div class="teams-grid">
     {% for sala in salas %}
-    <article class="teams-tile" style="cursor:default;">
+    <a href="{{ sala.get_absolute_url }}" class="teams-tile" style="display: flex; flex-direction: column; height: 100%;">
+        
         {% if sala.imagen_portada %}
-        <img src="{{ sala.imagen_portada.url }}" alt="{{ sala.nombre }}" style="width:100%;height:140px;object-fit:cover;border-radius:8px;margin-bottom:4px;">
+        <img src="{{ sala.imagen_portada.url }}" alt="{{ sala.nombre }}" style="width:100%;height:160px;object-fit:cover;border-radius:8px;margin-bottom:12px;">
         {% else %}
-        <div class="teams-tile__icon">
-            <span style="font-size:14px;font-weight:700;">{{ sala.nombre|slice:":2"|upper }}</span>
+        <div class="teams-tile__icon" style="width:100%; height:160px; border-radius:8px; margin-bottom:12px; font-size:24px;">
+            <span style="font-weight:700;">{{ sala.nombre|slice:":2"|upper }}</span>
         </div>
         {% endif %}
-        <h4 class="teams-tile__title">{{ sala.nombre }}</h4>
-        <p class="teams-tile__desc">{{ sala.ubicacion }} · Cap. {{ sala.capacidad_maxima }}</p>
-        <p class="teams-tile__desc" style="margin:0;">
-            ${{ sala.precio_por_hora }}/h ·
+        
+        <h4 class="teams-tile__title" style="margin-bottom: 4px; font-size: 16px;">{{ sala.nombre }}</h4>
+        
+        <p class="teams-tile__desc" style="margin-bottom: 16px; font-size: 13px;">
+            <strong>{{ sala.get_tipo_plano_display }}</strong> <br>
+            Capacidad: {{ sala.capacidad_maxima }} personas
+        </p>
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto; padding-top: 12px; border-top: 1px solid var(--border);">
+            <p class="teams-tile__desc" style="margin:0; font-weight: 600; color: var(--text-primary); font-size: 15px;">
+                ${{ sala.precio_por_hora }}<span style="font-weight: normal; font-size: 12px; color: var(--text-secondary);">/h</span>
+            </p>
             <span class="teams-badge {% if sala.estado == 'Disponible' %}teams-badge--success{% elif sala.estado == 'Mantenimiento' %}teams-badge--warning{% endif %}">
                 {{ sala.estado }}
             </span>
-        </p>
-    </article>
+        </div>
+    </a>
     {% endfor %}
 </div>
+
 {% if page_obj.has_other_pages %}
 <nav class="teams-pagination" aria-label="Paginación">
     {% if page_obj.has_previous %}
@@ -38,6 +48,7 @@
     {% endif %}
 </nav>
 {% endif %}
+
 {% else %}
 <div class="teams-card">
     <div class="teams-card__body">

@@ -1,6 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
-from django.views.generic import ListView, TemplateView
+from django.views.generic import ListView, TemplateView, DetailView
 
 from .models import Reserva, Sala
 
@@ -21,6 +21,13 @@ class SalaListaView(ListView):
         if q:
             qs = qs.filter(Q(nombre__icontains=q) | Q(ubicacion__icontains=q))
         return qs
+
+
+# --- NUEVA VISTA DE DETALLE ---
+class SalaDetailView(DetailView):
+    model = Sala
+    template_name = 'reservas/sala_detail.html'
+    context_object_name = 'sala'
 
 
 class ReservaListaView(LoginRequiredMixin, ListView):

@@ -923,3 +923,230 @@ body.teams-app {
     margin-top: 24px;
     flex-wrap: wrap;
 }
+
+/* ── VISTA DE DETALLE DE SALA (sala_detail.html) ── */
+
+.sala-detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 24px;
+}
+
+@media (max-width: 900px) { 
+    .sala-detail-grid { grid-template-columns: 1fr; } 
+}
+
+/* Contenedor Base del Plano */
+.blueprint-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 350px;
+}
+
+.blueprint-container {
+    position: relative;
+    width: 100%;
+    max-width: 300px;
+    aspect-ratio: 4 / 3;
+    border: 4px solid var(--text-muted);
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.02);
+    overflow: hidden;
+}
+
+[data-theme="dark"] .blueprint-container { background: rgba(255, 255, 255, 0.02); }
+
+/* Textos del plano */
+.blueprint-label {
+    margin-top: 16px;
+    font-size: 13px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    text-align: center;
+}
+
+.blueprint-disclaimer {
+    margin-top: 8px;
+    font-size: 12px;
+    color: var(--teams-purple);
+    background: var(--teams-purple-light);
+    padding: 4px 12px;
+    border-radius: 12px;
+    text-align: center;
+}
+
+/* Diseño A: Oficina */
+.blueprint-oficina .blueprint-table {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 120px; height: 60px;
+    background: var(--teams-purple-light);
+    border: 2px solid var(--teams-purple);
+    border-radius: var(--radius-sm);
+}
+
+.blueprint-oficina .blueprint-chair {
+    position: absolute;
+    width: 16px; height: 16px;
+    background: var(--card-bg);
+    border: 2px solid var(--text-secondary);
+    border-radius: 50%;
+}
+.blueprint-oficina .chair-top-1 { top: -24px; left: 20px; }
+.blueprint-oficina .chair-top-2 { top: -24px; right: 20px; }
+.blueprint-oficina .chair-bottom-1 { bottom: -24px; left: 20px; }
+.blueprint-oficina .chair-bottom-2 { bottom: -24px; right: 20px; }
+.blueprint-oficina .chair-left { top: 20px; left: -24px; }
+.blueprint-oficina .chair-right { top: 20px; right: -24px; }
+
+/* Diseño B: Fiesta */
+.blueprint-fiesta .stage {
+    position: absolute;
+    top: 12px; left: 50%;
+    transform: translateX(-50%);
+    width: 150px; height: 28px;
+    background: rgba(128, 128, 128, 0.1);
+    border: 1px dashed var(--text-secondary);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; color: var(--text-secondary);
+    letter-spacing: 1px;
+}
+
+.blueprint-fiesta .dance-floor {
+    position: absolute;
+    top: 60px; left: 50%;
+    transform: translateX(-50%);
+    width: 100px; height: 100px;
+    border: 2px solid var(--teams-purple);
+    background: var(--teams-purple-light);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: bold; color: var(--teams-purple-active);
+    letter-spacing: 2px;
+}
+
+.blueprint-fiesta .party-table {
+    position: absolute;
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    border: 2px solid var(--teams-purple);
+    background: var(--card-bg);
+}
+
+.blueprint-fiesta .party-table::after {
+    content: '';
+    position: absolute;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: transparent;
+    top: 8px; left: 8px;
+    box-shadow: 
+        0 -16px 0 var(--text-secondary),  
+        0  16px 0 var(--text-secondary),  
+       -16px  0 0 var(--text-secondary),  
+        16px  0 0 var(--text-secondary);  
+}
+
+.pt-1 { top: 60px; left: 30px; }
+.pt-2 { top: 124px; left: 30px; }
+.pt-3 { bottom: 24px; left: 60px; }
+.pt-6 { top: 124px; right: 30px; }
+.pt-7 { top: 60px; right: 30px; }
+
+/* Diseño C: Cine / Auditorio */
+.blueprint-cine .screen {
+    position: absolute;
+    top: 15px; left: 15%; right: 15%; height: 6px;
+    background: var(--teams-purple);
+    border-radius: 4px;
+    box-shadow: 0 4px 12px var(--teams-purple-light);
+}
+
+.blueprint-cine .seat-row {
+    position: absolute;
+    left: 50%; transform: translateX(-50%);
+    display: flex; gap: 6px;
+}
+
+.blueprint-cine .seat {
+    width: 14px; height: 14px;
+    background: var(--text-secondary);
+    border-radius: 2px 2px 4px 4px;
+    opacity: 0.8;
+}
+
+.row-1 { top: 60px; }
+.row-2 { top: 90px; }
+.row-3 { top: 120px; }
+.row-4 { top: 150px; }
+
+/* Detalles de la Sala */
+.sala-info-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    display: flex; flex-direction: column;
+}
+.sala-info__header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+.sala-info__title { font-size: 28px; font-weight: 600; margin: 0 0 8px; color: var(--text-primary); }
+.sala-info__location { color: var(--text-secondary); display: flex; align-items: center; gap: 6px; font-size: 14px; }
+.sala-info__price { font-size: 24px; font-weight: 600; color: var(--teams-purple); margin: 24px 0; }
+.sala-info__price span { font-size: 14px; color: var(--text-secondary); font-weight: 400; }
+.sala-info__features {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid var(--border);
+}
+.feature-item { display: flex; align-items: center; gap: 8px; color: var(--text-primary); font-size: 14px; }
+.feature-icon { color: var(--teams-purple); }
+.sala-info__desc { color: var(--text-secondary); line-height: 1.6; margin-bottom: 32px; flex: 1; }
+.btn-reserve-lg { width: 100%; justify-content: center; padding: 12px; font-size: 16px; }
+
+/* Galería de Imágenes */
+.sala-gallery { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; margin-top: 24px; }
+.sala-gallery h3 { font-size: 18px; font-weight: 600; margin: 0 0 16px; }
+.gallery-image { width: 100%; height: 400px; object-fit: cover; border-radius: var(--radius-md); background: var(--sidebar-bg); }
+
+/* Botón Flotante de Regreso */
+.sticky-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 20px;
+    pointer-events: none; 
+}
+
+.btn-back-floating {
+    pointer-events: auto;
+    background: var(--card-bg);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+    padding: 8px 16px 8px 12px;
+    border-radius: 24px;
+    font-size: 14px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    box-shadow: var(--shadow-md);
+    transition: all 0.2s ease;
+}
+
+.btn-back-floating:hover {
+    background: var(--teams-purple);
+    color: #fff;
+    border-color: var(--teams-purple);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}

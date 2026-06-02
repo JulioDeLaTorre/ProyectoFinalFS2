@@ -1,9 +1,7 @@
 import uuid
-
 from django.conf import settings
 from django.db import models
 from django.urls import reverse
-
 
 class Sala(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -26,6 +24,18 @@ class Sala(models.Model):
         ],
         default='Disponible',
     )
+    
+    tipo_plano = models.CharField(
+        max_length=20,
+        choices=[
+            ('oficina', 'Oficina / Sala de Juntas'),
+            ('fiesta', 'Salón de Fiestas'),
+            ('cine', 'Auditorio / Cine'),
+        ],
+        default='oficina',
+        verbose_name='Tipo de Plano (Visual)'
+    )
+    
     imagen_portada = models.ImageField(
         upload_to='salas_portadas/',
         blank=True,
@@ -37,7 +47,6 @@ class Sala(models.Model):
 
     def get_absolute_url(self):
         return reverse('detalle_sala', kwargs={'pk': self.pk})
-
 
 class Reserva(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
