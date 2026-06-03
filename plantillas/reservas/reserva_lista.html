@@ -14,7 +14,7 @@
 <div class="teams-card">
     <div class="teams-card__body" style="padding-top:8px;padding-bottom:8px;">
         {% for reserva in reservas %}
-        <div class="teams-feed-item">
+        <div class="teams-feed-item" style="align-items:center;">
             <div class="teams-feed-item__avatar">{{ reserva.sala.nombre|slice:":2"|upper }}</div>
             <div class="teams-feed-item__content">
                 <p class="teams-feed-item__text">
@@ -28,6 +28,12 @@
                     · {{ reserva.tipo_renta }} · ${{ reserva.costo_total }}
                 </span>
             </div>
+            {% if reserva.estado_reserva != 'Cancelada' %}
+            <div style="display:flex;gap:8px;margin-left:auto;flex-shrink:0;">
+                <a href="{% url 'reserva_mover' reserva.pk %}" class="btn-teams btn-teams--ghost" style="font-size:0.8rem;padding:4px 10px;">Mover</a>
+                <a href="{% url 'reserva_cancelar' reserva.pk %}" class="btn-teams btn-teams--ghost" style="font-size:0.8rem;padding:4px 10px;color:var(--teams-danger,#c50f1f);">Cancelar</a>
+            </div>
+            {% endif %}
         </div>
         {% endfor %}
     </div>

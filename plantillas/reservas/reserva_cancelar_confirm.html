@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Cancelar reserva — RentaSalas{% endblock %}
+{% block sidebar_title %}Reservas{% endblock %}
+{% block header_title %}Cancelar reserva{% endblock %}
+
+{% block content %}
+<div class="teams-card" style="max-width:520px;">
+    <div class="teams-card__body">
+        <p style="margin:0 0 8px;">¿Seguro que quieres cancelar esta reserva?</p>
+        <p style="margin:0 0 20px;color:var(--teams-text-secondary);">
+            <strong>{{ object.sala.nombre }}</strong> —
+            {{ object.fecha_inicio|date:"d/m/Y H:i" }} a {{ object.fecha_fin|date:"H:i" }}
+        </p>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn-teams btn-teams--danger">Sí, cancelar reserva</button>
+            <a href="{% url 'lista_reservas' %}" class="btn-teams btn-teams--ghost" style="margin-left:8px;">Volver</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

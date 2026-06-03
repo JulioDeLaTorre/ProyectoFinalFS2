@@ -5,9 +5,10 @@ from django.views.generic import ListView, TemplateView, DetailView
 from django.views.generic.edit import CreateView, UpdateView
 from django.contrib import messages
 from django.db import transaction
+from django.http import HttpResponseForbidden
 
 from .models import Reserva, Sala
-from .forms import ReservaForm 
+from .forms import ReservaForm, ReservaMoverForm
 
 class InicioView(TemplateView):
     template_name = 'inicio.html'
@@ -131,4 +132,56 @@ class ReservaCrearView(LoginRequiredMixin, CreateView):
             sala.save()
             
         messages.success(self.request, "¡Reserva confirmada con éxito!")
+        return super().form_valid(form)
+
+
+class ReservaCancelarView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    """Muestra confirmación y cancela la reserva (POST)."""
+    model = Reserva
+    fields = []  # No necesitamos campos; solo confirmar
+    template_name = 'reservas/reserva_cancelar_confirm.html'
+    success_url = reverse_lazy('lista_reservas')
+
+    def test_func(self):
+        reserva = self.get_object()
+        return reserva.usuario == self.request.user and reserva.estado_reserva != 'Cancelada'
+
+    def form_valid(self, form):
+        reserva = form.save(commit=False)
+        reserva.estado_reserva = 'Cancelada'
+        with transaction.atomic():
+            reserva.save()
+            # Reactivar la sala solo si no tiene otra reserva activa
+            tiene_otra_activa = Reserva.objects.filter(
+                sala=reserva.sala,
+                estado_reserva__in=['Pendiente', 'Confirmada'],
+            ).exclude(pk=reserva.pk).exists()
+            if not tiene_otra_activa:
+                reserva.sala.estado = 'Disponible'
+                reserva.sala.save()
+        messages.success(self.request, "Reserva cancelada correctamente.")
+        return super().form_valid(form)
+
+
+class ReservaMoverView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    """Permite cambiar la fecha de inicio (y recalcula fecha_fin) de una reserva."""
+    model = Reserva
+    form_class = ReservaMoverForm
+    template_name = 'reservas/reserva_mover_form.html'
+    success_url = reverse_lazy('lista_reservas')
+
+    def test_func(self):
+        reserva = self.get_object()
+        return reserva.usuario == self.request.user and reserva.estado_reserva != 'Cancelada'
+
+    def form_valid(self, form):
+        reserva = form.save(commit=False)
+        # Recalcular fecha_fin según tipo_renta
+        from datetime import timedelta
+        if reserva.tipo_renta == 'Hora':
+            reserva.fecha_fin = reserva.fecha_inicio + timedelta(hours=1)
+        else:
+            reserva.fecha_fin = reserva.fecha_inicio + timedelta(days=1)
+        reserva.save()
+        messages.success(self.request, "Reserva movida correctamente.")
         return super().form_valid(form)
