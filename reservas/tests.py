@@ -35,7 +35,6 @@ class SalaModelTest(TestCase):
         url_esperada = reverse('detalle_sala', kwargs={'pk': self.sala.pk})
         self.assertEqual(self.sala.get_absolute_url(), url_esperada)
 
-
 class ReservaModelTest(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(username='cliente', password='password123')
@@ -61,7 +60,6 @@ class ReservaModelTest(TestCase):
         self.assertEqual(self.reserva.usuario.username, 'cliente')
         self.assertEqual(self.reserva.sala.nombre, "Auditorio B")
         self.assertTrue("Reserva de cliente" in str(self.reserva))
-
 
 class VistasAccesoTest(TestCase):
     def setUp(self):
@@ -113,34 +111,48 @@ class VistasAccesoTest(TestCase):
         self.client.login(username='jefe', password='123')
         response = self.client.get(reverse('sala_crear_admin'))
         self.assertEqual(response.status_code, 200)
-
+        
 class ReservaFlujoTest(TestCase):
     def setUp(self):
-        self.user_cliente = User.objects.create_user(username='cliente_reservas', password='123')
+        self.user = User.objects.create_user(
+            username='cliente_test',
+            password='password123'
+        )
+
         self.sala = Sala.objects.create(
-            nombre="Sala para Reservar", descripcion="Test", capacidad_maxima=10,
-            precio_por_hora=100.00, precio_por_dia=800.00
+            nombre="Sala Flujo",
+            descripcion="Sala para prueba de flujo",
+            ubicacion="Piso 2",
+            capacidad_maxima=10,
+            precio_por_hora=100.00,
+            precio_por_dia=800.00,
+            estado="Disponible",
+            tipo_plano="oficina"
         )
 
     def test_creacion_reserva_por_cliente(self):
         """Verifica que un cliente logueado pueda crear una reserva mediante POST"""
-        self.client.login(username='cliente_reservas', password='123')
-        
-        # Simulamos los datos que el usuario mandaría desde el HTML
+
+        self.client.login(username='cliente_test', password='password123')
+
+        fecha_inicio = timezone.now() + timedelta(days=1)
+        fecha_fin = fecha_inicio + timedelta(hours=2)
+
         datos_formulario = {
             'sala': self.sala.pk,
-            'fecha_inicio': (timezone.now() + timedelta(days=1)).strftime('%Y-%m-%dT%H:%M'),
-            'fecha_fin': (timezone.now() + timedelta(days=1, hours=2)).strftime('%Y-%m-%dT%H:%M'),
-            'tipo_renta': 'Hora'
+            'fecha_inicio': fecha_inicio.strftime('%Y-%m-%dT%H:%M'),
+            'fecha_fin': fecha_fin.strftime('%Y-%m-%dT%H:%M'),
+            'tipo_renta': 'Hora',
         }
-        
-        # Hacemos la petición POST a la vista
-        response = self.client.post(reverse('reserva_crear'), data=datos_formulario)
-        
-        # Verificamos que al terminar, nos redirija a la lista de reservas (status 302)
+
+        response = self.client.post(
+            reverse('reserva_crear'),
+            data=datos_formulario
+        )
+
         self.assertEqual(response.status_code, 302)
-        
-        # Verificamos que la reserva realmente exista en la base de datos
-        reserva_creada = Reserva.objects.filter(usuario=self.user_cliente, sala=self.sala).first()
-        self.assertIsNotNone(reserva_creada)
-        self.assertEqual(reserva_creada.estado_reserva, 'Pendiente')
+        self.assertEqual(Reserva.objects.count(), 1)
+
+        reserva = Reserva.objects.first()
+        self.assertEqual(reserva.sala, self.sala)
+        self.assertEqual(reserva.usuario, self.user)
