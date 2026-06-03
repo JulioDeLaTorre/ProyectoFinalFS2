@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}Acceso Denegado | RentaSalas{% endblock %}
+{% block header_title %}Error 403{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: center; align-items: center; min-height: 60vh;">
+    <div class="teams-card" style="text-align: center; max-width: 480px; padding: 48px 32px; border-top: 4px solid #d13438;">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#d13438" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 24px;">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+        </svg>
+        
+        <h1 style="font-size: 24px; font-weight: 600; color: var(--text-primary); margin: 0 0 12px;">Acceso Restringido</h1>
+        <p style="color: var(--text-secondary); margin: 0 0 32px; font-size: 15px; line-height: 1.5;">
+            No tienes los permisos de administrador necesarios para ver o modificar el contenido de esta página.
+        </p>
+        
+        <a href="{% url 'lista_salas' %}" class="btn-teams btn-teams--secondary" style="display: inline-flex; width: 100%; justify-content: center;">
+            Regresar al catálogo
+        </a>
+    </div>
+</div>
+{% endblock %}
