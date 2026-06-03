@@ -114,8 +114,8 @@
         </p>
 
         {% if sala.estado == 'Disponible' %}
-            <a href="{% url 'reserva_crear' %}?sala={{ sala.id }}" class="btn-teams btn-teams--primary btn-reserve-lg">
-                Reservar este espacio
+            <a href="{% url 'reserva_crear' %}?sala={{ sala.pk }}" class="btn-teams btn-teams--primary">
+                Reservar ahora
             </a>
         {% else %}
             <button class="btn-teams btn-teams--secondary btn-reserve-lg" disabled>

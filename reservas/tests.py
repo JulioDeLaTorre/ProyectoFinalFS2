@@ -113,3 +113,34 @@ class VistasAccesoTest(TestCase):
         self.client.login(username='jefe', password='123')
         response = self.client.get(reverse('sala_crear_admin'))
         self.assertEqual(response.status_code, 200)
+
+class ReservaFlujoTest(TestCase):
+    def setUp(self):
+        self.user_cliente = User.objects.create_user(username='cliente_reservas', password='123')
+        self.sala = Sala.objects.create(
+            nombre="Sala para Reservar", descripcion="Test", capacidad_maxima=10,
+            precio_por_hora=100.00, precio_por_dia=800.00
+        )
+
+    def test_creacion_reserva_por_cliente(self):
+        """Verifica que un cliente logueado pueda crear una reserva mediante POST"""
+        self.client.login(username='cliente_reservas', password='123')
+        
+        # Simulamos los datos que el usuario mandaría desde el HTML
+        datos_formulario = {
+            'sala': self.sala.pk,
+            'fecha_inicio': (timezone.now() + timedelta(days=1)).strftime('%Y-%m-%dT%H:%M'),
+            'fecha_fin': (timezone.now() + timedelta(days=1, hours=2)).strftime('%Y-%m-%dT%H:%M'),
+            'tipo_renta': 'Hora'
+        }
+        
+        # Hacemos la petición POST a la vista
+        response = self.client.post(reverse('reserva_crear'), data=datos_formulario)
+        
+        # Verificamos que al terminar, nos redirija a la lista de reservas (status 302)
+        self.assertEqual(response.status_code, 302)
+        
+        # Verificamos que la reserva realmente exista en la base de datos
+        reserva_creada = Reserva.objects.filter(usuario=self.user_cliente, sala=self.sala).first()
+        self.assertIsNotNone(reserva_creada)
+        self.assertEqual(reserva_creada.estado_reserva, 'Pendiente')
