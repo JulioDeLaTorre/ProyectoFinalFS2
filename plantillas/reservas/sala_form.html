@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}Alta de Sala | RentaSalas{% endblock %}
+
+{% block header_title %}
+    {% if object %}Editar sala{% else %}Agregar nueva sala{% endif %}
+{% endblock %}
+
+<div class="teams-card__header">
+    <h2 class="teams-card__title">
+        {% if object %}Modificar Espacio{% else %}Información del Espacio{% endif %}
+    </h2>
+</div>
+
+{% block content %}
+<div class="admin-form-container">
+    <div class="teams-card">
+        <div class="teams-card__header">
+            <h2 class="teams-card__title">Información del Espacio</h2>
+        </div>
+        <div class="teams-card__body">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    {% for field in form %}
+                        <div class="form-group" {% if field.name == 'descripcion' or field.name == 'imagen_portada' %}style="grid-column: 1 / -1;"{% endif %}>
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {{ field }}
+                            {% if field.help_text %}
+                                <small style="color: var(--text-muted); font-size: 12px; display: block; margin-top: 4px;">{{ field.help_text }}</small>
+                            {% endif %}
+                            {% for error in field.errors %}
+                                <span style="color: #d13438; font-size: 13px; display: block; margin-top: 4px;">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="form-actions">
+                    <a href="{% url 'lista_salas' %}" class="btn-teams btn-teams--secondary">Cancelar</a>
+                    <button type="submit" class="btn-teams btn-teams--primary">Guardar Sala</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

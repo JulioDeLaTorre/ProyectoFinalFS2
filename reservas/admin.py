@@ -10,6 +10,7 @@ class SalaAdmin(admin.ModelAdmin):
         'capacidad_maxima',
         'precio_por_hora',
         'precio_por_dia',
+        'tipo_plano',
         'estado',
     )
     search_fields = (
