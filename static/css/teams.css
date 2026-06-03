@@ -1232,15 +1232,91 @@ body.teams-app {
     box-shadow: var(--shadow-md);
 }
 
-.reserva-form-container { max-width: 600px; margin: 0 auto; }
-.form-group { margin-bottom: 20px; }
-.form-group label { display: block; font-weight: 600; font-size: 14px; margin-bottom: 8px; color: var(--text-primary); }
+/* Hero con color seleccionado sin bajar tonos */
+[data-theme="light"] .teams-hero {
+    background: linear-gradient(
+        135deg,
+        var(--teams-purple-active) 0%,
+        var(--teams-purple-hover) 45%,
+        var(--teams-purple) 100%
+    );
+    color: #ffffff;
+}
 
-.form-group input, .form-group select {
-    width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: var(--radius-md);
-    background: var(--card-bg); color: var(--text-primary); font-size: 14px; transition: all 0.2s;
+[data-theme="light"] .teams-hero__greeting,
+[data-theme="light"] .teams-hero__sub {
+    color: #ffffff;
+    opacity: 1;
 }
-.form-group input:focus, .form-group select:focus {
-    outline: none; border-color: var(--teams-purple); box-shadow: 0 0 0 2px var(--teams-purple-light);
+
+[data-theme="light"] .teams-hero::after {
+    background: rgba(255, 255, 255, 0.10);
 }
-.form-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border); }
+
+[data-theme="dark"] .teams-hero {
+    background: linear-gradient(
+        135deg,
+        #242424 0%,
+        var(--teams-purple-active) 45%,
+        var(--teams-purple) 100%
+    );
+    color: #ffffff;
+}
+
+[data-theme="dark"] .teams-hero__greeting,
+[data-theme="dark"] .teams-hero__sub {
+    color: #ffffff;
+    opacity: 1;
+}
+
+[data-theme="dark"] .teams-hero::after {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="light"] .teams-hero .btn-teams--secondary {
+    background: #242424;
+    color: #ffffff;
+    border: 1px solid #242424;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
+}
+
+[data-theme="light"] .teams-hero .btn-teams--secondary svg {
+    color: #ffffff;
+}
+
+[data-theme="light"] .teams-hero .btn-teams--secondary:hover {
+    background: #111111;
+    color: #ffffff;
+    border-color: #111111;
+    transform: translateY(-1px);
+}
+
+[data-theme="dark"] .teams-hero .btn-teams--secondary {
+    background: #ffffff;
+    color: #242424;
+    border: 1px solid #ffffff;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.45);
+}
+
+[data-theme="dark"] .teams-hero .btn-teams--secondary svg {
+    color: #242424;
+}
+
+[data-theme="dark"] .teams-hero .btn-teams--secondary:hover {
+    background: #f0f0f0;
+    color: #111111;
+    border-color: #f0f0f0;
+    transform: translateY(-1px);
+}
+
+[data-theme="light"] .teams-hero .btn-teams--ghost,
+[data-theme="dark"] .teams-hero .btn-teams--ghost {
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+}
+
+[data-theme="light"] .teams-hero .btn-teams--ghost:hover,
+[data-theme="dark"] .teams-hero .btn-teams--ghost:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: #ffffff;
+}
