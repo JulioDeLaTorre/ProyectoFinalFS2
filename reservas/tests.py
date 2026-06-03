@@ -113,3 +113,48 @@ class VistasAccesoTest(TestCase):
         self.client.login(username='jefe', password='123')
         response = self.client.get(reverse('sala_crear_admin'))
         self.assertEqual(response.status_code, 200)
+        
+class ReservaFlujoTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username='cliente_test',
+            password='password123'
+        )
+
+        self.sala = Sala.objects.create(
+            nombre="Sala Flujo",
+            descripcion="Sala para prueba de flujo",
+            ubicacion="Piso 2",
+            capacidad_maxima=10,
+            precio_por_hora=100.00,
+            precio_por_dia=800.00,
+            estado="Disponible",
+            tipo_plano="oficina"
+        )
+
+    def test_creacion_reserva_por_cliente(self):
+        """Verifica que un cliente logueado pueda crear una reserva mediante POST"""
+
+        self.client.login(username='cliente_test', password='password123')
+
+        fecha_inicio = timezone.now() + timedelta(days=1)
+        fecha_fin = fecha_inicio + timedelta(hours=2)
+
+        datos_formulario = {
+            'sala': self.sala.pk,
+            'fecha_inicio': fecha_inicio.strftime('%Y-%m-%dT%H:%M'),
+            'fecha_fin': fecha_fin.strftime('%Y-%m-%dT%H:%M'),
+            'tipo_renta': 'Hora',
+        }
+
+        response = self.client.post(
+            reverse('reserva_crear'),
+            data=datos_formulario
+        )
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Reserva.objects.count(), 1)
+
+        reserva = Reserva.objects.first()
+        self.assertEqual(reserva.sala, self.sala)
+        self.assertEqual(reserva.usuario, self.user)
