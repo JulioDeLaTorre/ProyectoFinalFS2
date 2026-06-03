@@ -1,13 +1,13 @@
 /* Estilo visual inspirado en Microsoft Teams / Fluent UI */
-/* ── 1. CONFIGURACIÓN E INYECCIÓN DE VARIABLES ── */
-/* ── 1. CONFIGURACIÓN BASE ── */
+/* â”€â”€ 1. CONFIGURACIÃ“N E INYECCIÃ“N DE VARIABLES â”€â”€ */
+/* â”€â”€ 1. CONFIGURACIÃ“N BASE â”€â”€ */
 :root {
     --rail-width: 68px;
     --sidebar-width: 280px;
     --header-height: 52px;
     --font-family: "Segoe UI", "Segoe UI Web (West European)", -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
 
-    /* Valores por defecto (Morado). JS sobreescribirá esto dinámicamente */
+    /* Valores por defecto (Morado). JS sobreescribirÃ¡ esto dinÃ¡micamente */
     --teams-purple: #5b5fc7;
     --teams-purple-hover: #4f52b2;
     --teams-purple-active: #444791;
@@ -25,7 +25,7 @@
     --radius-sm: 4px; --radius-md: 8px; --radius-lg: 12px;
 }
 
-/* ── 2. ENTORNO MODO OSCURO (Solo cambian los fondos, el acento lo maneja JS) ── */
+/* â”€â”€ 2. ENTORNO MODO OSCURO (Solo cambian los fondos, el acento lo maneja JS) â”€â”€ */
 [data-theme="dark"] {
     --rail-bg: #000000; --rail-hover: #1a1a1a; --rail-active: #242424;
     --rail-icon: #8a8886; --rail-icon-active: #ffffff;
@@ -42,7 +42,7 @@
 [data-theme="dark"] .btn-teams--secondary:hover { background: #2a2a2a; }
 [data-theme="dark"] .teams-sidebar__item:hover { background: rgba(255, 255, 255, 0.05); }
 
-/* ── 3. ESTILOS DE LOS BOTONES DEL HEADER ── */
+/* â”€â”€ 3. ESTILOS DE LOS BOTONES DEL HEADER â”€â”€ */
 .theme-controls {
     display: flex;
     align-items: center;
@@ -73,15 +73,15 @@
 [data-theme="dark"] .icon-sun { display: block; }
 [data-theme="dark"] .icon-moon { display: none; }
 
-/* Pequeños parches necesarios para inputs y hovers en la oscuridad */
+/* PequeÃ±os parches necesarios para inputs y hovers en la oscuridad */
 [data-theme="dark"] .teams-sidebar__search input { background: #1e1e1e; color: var(--text-primary); }
 [data-theme="dark"] .btn-teams--secondary { background: #1e1e1e; color: var(--text-primary); }
 [data-theme="dark"] .btn-teams--secondary:hover { background: #2a2a2a; }
 [data-theme="dark"] .teams-sidebar__item:hover { background: rgba(255, 255, 255, 0.05); }
 
-/* ── Paleta Modo Oscuro ── */
+/* â”€â”€ Paleta Modo Oscuro â”€â”€ */
 [data-theme="dark"] {
-    --teams-purple: #7f85f5; /* Un tono un poco más claro para mejor contraste */
+    --teams-purple: #7f85f5; /* Un tono un poco mÃ¡s claro para mejor contraste */
     --teams-purple-hover: #6b70d3;
     --teams-purple-active: #5b5fc7;
     --teams-purple-light: rgba(91, 95, 199, 0.15);
@@ -108,7 +108,7 @@
     --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
 }
 
-/* Modificaciones específicas para modo oscuro en algunos elementos */
+/* Modificaciones especÃ­ficas para modo oscuro en algunos elementos */
 [data-theme="dark"] .teams-sidebar__search input {
     background: #1e1e1e;
     color: var(--text-primary);
@@ -124,7 +124,7 @@
     background: rgba(255, 255, 255, 0.05);
 }
 
-/* ── Estilos del Toggle (Sol/Luna) ── */
+/* â”€â”€ Estilos del Toggle (Sol/Luna) â”€â”€ */
 .theme-toggle {
     background: transparent;
     border: none;
@@ -136,7 +136,7 @@
     align-items: center;
     justify-content: center;
     transition: background 0.15s, color 0.15s;
-    margin-right: 8px; /* Separación de los botones de sesión */
+    margin-right: 8px; /* SeparaciÃ³n de los botones de sesiÃ³n */
 }
 
 .theme-toggle:hover {
@@ -149,7 +149,7 @@
     height: 20px;
 }
 
-/* Lógica visual de los iconos según el tema */
+/* LÃ³gica visual de los iconos segÃºn el tema */
 [data-theme="light"] .icon-sun { display: none; }
 [data-theme="light"] .icon-moon { display: block; }
 [data-theme="dark"] .icon-sun { display: block; }
@@ -175,7 +175,7 @@ body.teams-app {
     -webkit-font-smoothing: antialiased;
 }
 
-/* ── Layout principal ── */
+/* â”€â”€ Layout principal â”€â”€ */
 
 .teams-shell {
     display: flex;
@@ -421,7 +421,7 @@ body.teams-app {
     text-overflow: ellipsis;
 }
 
-/* Área de contenido principal */
+/* Ãrea de contenido principal */
 
 .teams-main {
     flex: 1;
@@ -788,7 +788,7 @@ body.teams-app {
     }
 }
 
-/* ── Páginas de autenticación (login / registro) ── */
+/* â”€â”€ PÃ¡ginas de autenticaciÃ³n (login / registro) â”€â”€ */
 
 .teams-auth-page {
     background: linear-gradient(160deg, #f5f5f5 0%, #e8ebfa 50%, #f0f1fa 100%);
@@ -922,4 +922,102 @@ body.teams-app {
     gap: 16px;
     margin-top: 24px;
     flex-wrap: wrap;
+}
+
+/* â”€â”€ Hero con color seleccionado sin bajar tanto los tonos â”€â”€
+   Antes el modo claro mezclaba el color con mucho blanco. Por eso
+   negro se veÃ­a gris y otros colores se veÃ­an lavados.
+*/
+
+/* Modo claro: usa el color seleccionado real */
+[data-theme="light"] .teams-hero {
+    background: linear-gradient(
+        135deg,
+        var(--teams-purple-active) 0%,
+        var(--teams-purple-hover) 45%,
+        var(--teams-purple) 100%
+    );
+    color: #ffffff;
+}
+
+[data-theme="light"] .teams-hero__greeting,
+[data-theme="light"] .teams-hero__sub {
+    color: #ffffff;
+    opacity: 1;
+}
+
+[data-theme="light"] .teams-hero::after {
+    background: rgba(255, 255, 255, 0.10);
+}
+
+/* Modo oscuro: usa el mismo color, pero con arranque oscuro */
+[data-theme="dark"] .teams-hero {
+    background: linear-gradient(
+        135deg,
+        #242424 0%,
+        var(--teams-purple-active) 45%,
+        var(--teams-purple) 100%
+    );
+    color: #ffffff;
+}
+
+[data-theme="dark"] .teams-hero__greeting,
+[data-theme="dark"] .teams-hero__sub {
+    color: #ffffff;
+    opacity: 1;
+}
+
+[data-theme="dark"] .teams-hero::after {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* BotÃ³n principal dentro del hero:
+   en claro se mantiene oscuro; en oscuro se vuelve claro */
+[data-theme="light"] .teams-hero .btn-teams--secondary {
+    background: #242424;
+    color: #ffffff;
+    border: 1px solid #242424;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
+}
+
+[data-theme="light"] .teams-hero .btn-teams--secondary svg {
+    color: #ffffff;
+}
+
+[data-theme="light"] .teams-hero .btn-teams--secondary:hover {
+    background: #111111;
+    color: #ffffff;
+    border-color: #111111;
+    transform: translateY(-1px);
+}
+
+[data-theme="dark"] .teams-hero .btn-teams--secondary {
+    background: #ffffff;
+    color: #242424;
+    border: 1px solid #ffffff;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.45);
+}
+
+[data-theme="dark"] .teams-hero .btn-teams--secondary svg {
+    color: #242424;
+}
+
+[data-theme="dark"] .teams-hero .btn-teams--secondary:hover {
+    background: #f0f0f0;
+    color: #111111;
+    border-color: #f0f0f0;
+    transform: translateY(-1px);
+}
+
+/* BotÃ³n secundario del hero */
+[data-theme="light"] .teams-hero .btn-teams--ghost,
+[data-theme="dark"] .teams-hero .btn-teams--ghost {
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+}
+
+[data-theme="light"] .teams-hero .btn-teams--ghost:hover,
+[data-theme="dark"] .teams-hero .btn-teams--ghost:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: #ffffff;
 }
