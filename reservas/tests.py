@@ -35,7 +35,6 @@ class SalaModelTest(TestCase):
         url_esperada = reverse('detalle_sala', kwargs={'pk': self.sala.pk})
         self.assertEqual(self.sala.get_absolute_url(), url_esperada)
 
-
 class ReservaModelTest(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(username='cliente', password='password123')
@@ -61,7 +60,6 @@ class ReservaModelTest(TestCase):
         self.assertEqual(self.reserva.usuario.username, 'cliente')
         self.assertEqual(self.reserva.sala.nombre, "Auditorio B")
         self.assertTrue("Reserva de cliente" in str(self.reserva))
-
 
 class VistasAccesoTest(TestCase):
     def setUp(self):

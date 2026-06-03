@@ -3,8 +3,12 @@ from django.db.models import Q
 from django.urls import reverse_lazy
 from django.views.generic import ListView, TemplateView, DetailView
 from django.views.generic.edit import CreateView, UpdateView
+from django.contrib import messages
+from django.db import transaction
+from django.http import HttpResponseForbidden
 
 from .models import Reserva, Sala
+from .forms import ReservaForm, ReservaMoverForm
 
 class InicioView(TemplateView):
     template_name = 'inicio.html'
@@ -73,11 +77,6 @@ class ReservaListaView(LoginRequiredMixin, ListView):
             .order_by('-fecha_inicio')
         )
 
-
-class ReservaCrearView(LoginRequiredMixin, TemplateView):
-    template_name = 'reservas/reserva_form_placeholder.html'
-
-
 class CalendarioView(LoginRequiredMixin, TemplateView):
     template_name = 'reservas/calendario.html'
 
@@ -89,3 +88,100 @@ class CalendarioView(LoginRequiredMixin, TemplateView):
             .order_by('fecha_inicio')[:20]
         )
         return context
+    
+class ReservaCrearView(LoginRequiredMixin, CreateView):
+    model = Reserva
+    form_class = ReservaForm
+    template_name = 'reservas/reserva_form.html'
+    success_url = reverse_lazy('lista_reservas')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Obtenemos la sala de la URL o del parámetro GET
+        sala_id = self.request.GET.get('sala')
+        context['sala'] = Sala.objects.get(pk=sala_id)
+        return context
+
+    def form_valid(self, form):
+        # 1. Obtenemos la instancia del formulario sin guardar aún
+        reserva = form.save(commit=False)
+        
+        # 2. Asignamos la sala (que viene de la URL)
+        sala_id = self.request.GET.get('sala')
+        sala = Sala.objects.get(pk=sala_id)
+        reserva.sala = sala
+        
+        # 3. Asignamos usuario y estado
+        reserva.usuario = self.request.user
+        reserva.estado_reserva = 'Confirmada'
+        reserva.pagado = True
+        
+        # 4. CALCULO DEL COSTO (Aquí está la magia)
+        # Si es por hora, tomamos precio_por_hora. Si es por día, precio_por_dia.
+        if reserva.tipo_renta == 'Hora':
+            reserva.costo_total = sala.precio_por_hora
+        else:
+            reserva.costo_total = sala.precio_por_dia
+            
+        # 5. Ahora guardamos la reserva con el costo ya calculado
+        with transaction.atomic():
+            reserva.save()
+            
+            # Cambiamos estado de la sala
+            sala.estado = 'Inactiva'
+            sala.save()
+            
+        messages.success(self.request, "¡Reserva confirmada con éxito!")
+        return super().form_valid(form)
+
+
+class ReservaCancelarView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    """Muestra confirmación y cancela la reserva (POST)."""
+    model = Reserva
+    fields = []  # No necesitamos campos; solo confirmar
+    template_name = 'reservas/reserva_cancelar_confirm.html'
+    success_url = reverse_lazy('lista_reservas')
+
+    def test_func(self):
+        reserva = self.get_object()
+        return reserva.usuario == self.request.user and reserva.estado_reserva != 'Cancelada'
+
+    def form_valid(self, form):
+        reserva = form.save(commit=False)
+        reserva.estado_reserva = 'Cancelada'
+        with transaction.atomic():
+            reserva.save()
+            # Reactivar la sala solo si no tiene otra reserva activa
+            tiene_otra_activa = Reserva.objects.filter(
+                sala=reserva.sala,
+                estado_reserva__in=['Pendiente', 'Confirmada'],
+            ).exclude(pk=reserva.pk).exists()
+            if not tiene_otra_activa:
+                reserva.sala.estado = 'Disponible'
+                reserva.sala.save()
+        messages.success(self.request, "Reserva cancelada correctamente.")
+        return super().form_valid(form)
+
+
+class ReservaMoverView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    """Permite cambiar la fecha de inicio (y recalcula fecha_fin) de una reserva."""
+    model = Reserva
+    form_class = ReservaMoverForm
+    template_name = 'reservas/reserva_mover_form.html'
+    success_url = reverse_lazy('lista_reservas')
+
+    def test_func(self):
+        reserva = self.get_object()
+        return reserva.usuario == self.request.user and reserva.estado_reserva != 'Cancelada'
+
+    def form_valid(self, form):
+        reserva = form.save(commit=False)
+        # Recalcular fecha_fin según tipo_renta
+        from datetime import timedelta
+        if reserva.tipo_renta == 'Hora':
+            reserva.fecha_fin = reserva.fecha_inicio + timedelta(hours=1)
+        else:
+            reserva.fecha_fin = reserva.fecha_inicio + timedelta(days=1)
+        reserva.save()
+        messages.success(self.request, "Reserva movida correctamente.")
+        return super().form_valid(form)

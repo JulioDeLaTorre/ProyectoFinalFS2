@@ -1,3 +1,5 @@
 .venv
 .env
 indicaciones.txt
+*.pyc
+__pycache__/
