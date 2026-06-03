@@ -3,8 +3,11 @@ from django.db.models import Q
 from django.urls import reverse_lazy
 from django.views.generic import ListView, TemplateView, DetailView
 from django.views.generic.edit import CreateView, UpdateView
+from django.contrib import messages
+from django.db import transaction
 
 from .models import Reserva, Sala
+from .forms import ReservaForm 
 
 class InicioView(TemplateView):
     template_name = 'inicio.html'
@@ -73,11 +76,6 @@ class ReservaListaView(LoginRequiredMixin, ListView):
             .order_by('-fecha_inicio')
         )
 
-
-class ReservaCrearView(LoginRequiredMixin, TemplateView):
-    template_name = 'reservas/reserva_form_placeholder.html'
-
-
 class CalendarioView(LoginRequiredMixin, TemplateView):
     template_name = 'reservas/calendario.html'
 
@@ -89,3 +87,48 @@ class CalendarioView(LoginRequiredMixin, TemplateView):
             .order_by('fecha_inicio')[:20]
         )
         return context
+    
+class ReservaCrearView(LoginRequiredMixin, CreateView):
+    model = Reserva
+    form_class = ReservaForm
+    template_name = 'reservas/reserva_form.html'
+    success_url = reverse_lazy('lista_reservas')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Obtenemos la sala de la URL o del parámetro GET
+        sala_id = self.request.GET.get('sala')
+        context['sala'] = Sala.objects.get(pk=sala_id)
+        return context
+
+    def form_valid(self, form):
+        # 1. Obtenemos la instancia del formulario sin guardar aún
+        reserva = form.save(commit=False)
+        
+        # 2. Asignamos la sala (que viene de la URL)
+        sala_id = self.request.GET.get('sala')
+        sala = Sala.objects.get(pk=sala_id)
+        reserva.sala = sala
+        
+        # 3. Asignamos usuario y estado
+        reserva.usuario = self.request.user
+        reserva.estado_reserva = 'Confirmada'
+        reserva.pagado = True
+        
+        # 4. CALCULO DEL COSTO (Aquí está la magia)
+        # Si es por hora, tomamos precio_por_hora. Si es por día, precio_por_dia.
+        if reserva.tipo_renta == 'Hora':
+            reserva.costo_total = sala.precio_por_hora
+        else:
+            reserva.costo_total = sala.precio_por_dia
+            
+        # 5. Ahora guardamos la reserva con el costo ya calculado
+        with transaction.atomic():
+            reserva.save()
+            
+            # Cambiamos estado de la sala
+            sala.estado = 'Inactiva'
+            sala.save()
+            
+        messages.success(self.request, "¡Reserva confirmada con éxito!")
+        return super().form_valid(form)

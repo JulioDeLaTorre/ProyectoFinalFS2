@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="reserva-form-container" style="max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+    
+    <div class="teams-card">
+        <div class="teams-card__header">
+            <h2 class="teams-card__title">Resumen del espacio</h2>
+        </div>
+        <div class="teams-card__body">
+            {% if sala.imagen_portada %}
+                <img src="{{ sala.imagen_portada.url }}" style="width: 100%; border-radius: 8px; margin-bottom: 16px;">
+            {% else %}
+                <div style="width: 100%; height: 150px; background: #f0f0f0; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #888; margin-bottom: 16px;">
+                    <span>Sin imagen disponible</span>
+                </div>
+            {% endif %}
+            <h3 style="margin: 0;">{{ sala.nombre }}</h3>
+            <p style="color: var(--text-secondary);">{{ sala.get_tipo_plano_display }}</p>
+            <hr>
+            <p><strong>Capacidad:</strong> {{ sala.capacidad_maxima }} personas</p>
+            <p><strong>Precio:</strong> ${{ sala.precio_por_hora }}/h</p>
+        </div>
+    </div>
+
+    <div class="teams-card">
+        <div class="teams-card__header"><h2 class="teams-card__title">Agendar Reserva</h2></div>
+        <div class="teams-card__body">
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label>Tipo de renta</label>
+                    {{ form.tipo_renta }}
+                </div>
+                <div class="form-group">
+                    <label>Fecha inicio</label>
+                    {{ form.fecha_inicio }}
+                </div>
+                <div class="form-group">
+                    <label>Fecha fin (Auto)</label>
+                    {{ form.fecha_fin }}
+                </div>
+                <button type="submit" class="btn-teams btn-teams--primary" style="width:100%">Confirmar y Pagar</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+(function() {
+    function calcularFechaFin() {
+        const inicioInput = document.getElementById('id_fecha_inicio');
+        const tipoSelect = document.getElementById('id_tipo_renta');
+        const finInput = document.getElementById('id_fecha_fin');
+        
+        if (!inicioInput || !inicioInput.value || !tipoSelect) return;
+        
+        let fecha = new Date(inicioInput.value);
+        
+        if (tipoSelect.value === 'Hora') {
+            fecha.setHours(fecha.getHours() + 1);
+        } else if (tipoSelect.value === 'Dia') {
+            fecha.setDate(fecha.getDate() + 1);
+        }
+        
+        const offset = fecha.getTimezoneOffset() * 60000;
+        const localISOTime = (new Date(fecha - offset)).toISOString().slice(0,16);
+        if (finInput) finInput.value = localISOTime;
+    }
+
+    const inicio = document.getElementById('id_fecha_inicio');
+    const tipo = document.getElementById('id_tipo_renta');
+    
+    if (inicio) inicio.addEventListener('change', calcularFechaFin);
+    if (tipo) tipo.addEventListener('change', calcularFechaFin);
+})();
+</script>
+{% endblock %}
