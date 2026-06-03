@@ -17,7 +17,8 @@ class SalaListaView(ListView):
     paginate_by = 12
 
     def get_queryset(self):
-        qs = super().get_queryset()
+        # AQUI AGREGAMOS EL ORDER_BY PARA QUITAR EL WARNING
+        qs = super().get_queryset().order_by('nombre')
         q = self.request.GET.get('q', '').strip()
         if q:
             qs = qs.filter(Q(nombre__icontains=q) | Q(ubicacion__icontains=q))
