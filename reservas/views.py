@@ -1,9 +1,10 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Q
+from django.urls import reverse_lazy
 from django.views.generic import ListView, TemplateView, DetailView
+from django.views.generic.edit import CreateView, UpdateView
 
 from .models import Reserva, Sala
-
 
 class InicioView(TemplateView):
     template_name = 'inicio.html'
@@ -23,12 +24,38 @@ class SalaListaView(ListView):
         return qs
 
 
-# --- NUEVA VISTA DE DETALLE ---
 class SalaDetailView(DetailView):
     model = Sala
     template_name = 'reservas/sala_detail.html'
     context_object_name = 'sala'
 
+class SalaCrearView(UserPassesTestMixin, CreateView):
+    model = Sala
+    template_name = 'reservas/sala_form.html'
+    fields = [
+        'nombre', 'descripcion', 'ubicacion', 'capacidad_maxima', 
+        'precio_por_hora', 'precio_por_dia', 'estado', 'tipo_plano', 'imagen_portada'
+    ]
+    success_url = reverse_lazy('lista_salas')
+
+    def test_func(self):
+        return self.request.user.is_staff or self.request.user.is_superuser
+    
+class SalaEditarView(UserPassesTestMixin, UpdateView):
+    model = Sala
+    template_name = 'reservas/sala_form.html'
+    fields = [
+        'nombre', 'descripcion', 'ubicacion', 'capacidad_maxima', 
+        'precio_por_hora', 'precio_por_dia', 'estado', 'tipo_plano', 'imagen_portada'
+    ]
+
+    def test_func(self):
+        # Solo administradores pueden editar
+        return self.request.user.is_staff or self.request.user.is_superuser
+
+    def get_success_url(self):
+        # Cuando termine de editar, lo regresamos a ver cómo quedó la sala
+        return reverse_lazy('detalle_sala', kwargs={'pk': self.object.pk})
 
 class ReservaListaView(LoginRequiredMixin, ListView):
     model = Reserva

@@ -155,6 +155,16 @@
                 </span>
             </a>
             {% endif %}
+            {% if user.is_staff %}
+            <p class="teams-sidebar__section-label">Administración</p>
+            <a href="{% url 'sala_crear_admin' %}" class="teams-sidebar__item {% if url_name == 'sala_crear_admin' %}active{% endif %}">
+                <span class="teams-sidebar__item-icon" style="background: #242424;">+</span>
+                <span class="teams-sidebar__item-text">
+                    <span class="teams-sidebar__item-title">Alta de Sala</span>
+                    <span class="teams-sidebar__item-sub">Solo administradores</span>
+                </span>
+            </a>
+            {% endif %}
             {% endblock %}
         </nav>
     </aside>
